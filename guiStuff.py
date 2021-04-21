@@ -1,7 +1,222 @@
 import PySimpleGUI as sg
+import RPi.GPIO as GPIO
+import time
+import multiprocessing
+
+GPIO.setmode(GPIO.BCM)
+
+#Sensors for Water Level Sensor
+#GPIO_TRIGGER =
+#GPIO_ECHO =
+#GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
+#GPIO.setup(GPIO_ECHO, GPIO.IN)
+GPIOPin =
+GPIO.setup(GPIOPin, GPIO.OUT)
+
+#Sensors for Staion 1
+GPIO_TRIGGER1 =3
+GPIO_ECHO1 =2
+GPIO.setup(GPIO_TRIGGER1, GPIO.OUT)
+GPIO.setup(GPIO_ECHO1, GPIO.IN)
+GPIOPin1 =17
+GPIO.setup(GPIOPin1, GPIO.OUT)
+
+#Sensors for Station 2
+GPIO_TRIGGER2 =15
+GPIO_ECHO2 =14
+GPIO.setup(GPIO_TRIGGER2, GPIO.OUT)
+GPIO.setup(GPIO_ECHO2, GPIO.IN)
+GPIOPin2 =27
+GPIO.setup(GPIOPin2, GPIO.OUT)
+
+
+#Sensors for Station 3
+GPIO_TRIGGER3 =24
+GPIO_ECHO3 =23
+GPIO.setup(GPIO_TRIGGER3, GPIO.OUT)
+GPIO.setup(GPIO_ECHO3, GPIO.IN)
+GPIOPin3 =22
+GPIO.setup(GPIOPin3, GPIO.OUT)
+
+#Sensors for Station 4
+GPIO_TRIGGER4 =8
+GPIO_ECHO4 =25
+GPIO.setup(GPIO_TRIGGER4, GPIO.OUT)
+GPIO.setup(GPIO_ECHO4, GPIO.IN)
+GPIOPin4 =10
+GPIO.setup(GPIOPin4, GPIO.OUT)
+
+
+def waterLevel():
+    stop = False
+
+    while stop == False:
+
+        #dist = distance(GPIO_TRIGGER, GPIO_ECHO)
+
+        time.sleep(5)
+
+        waterOn(GPIOPin)
+
+        time.sleep(2)
+
+        waterOff(GPIOPin)
+
+        if dist >= 5:
+            stop = True
+
+
+def waterOn(Pin):
+    GPIO.output(Pin, True)
+
+
+def waterOff(Pin):
+    GPIO.output(Pin, False)
+
+
+def distance(GPIO_Trigger, GPIO_ECHO):
+    keepGoing = True
+
+    while keepGoing == True:
+        GPIO.output(GPIO_Trigger, True)
+
+    # set Trigger after 0.01ms to LOW
+    time.sleep(0.00001)
+    GPIO.output(GPIO_Trigger, False)
+
+    StartTime = time.time()
+    StopTime = time.time()
+
+    # save StartTime
+    while GPIO.input(GPIO_ECHO) == 0:
+        StartTime = time.time()
+
+    # save time of arrival
+    while GPIO.input(GPIO_ECHO) == 1:
+        StopTime = time.time()
+
+    # time difference between start and arrival
+    TimeElapsed = StopTime - StartTime
+    # multiply with the sonic speed (34300 cm/s)
+    # and divide by 2, because there and back
+
+    distance = (TimeElapsed * 34300) / 2
+
+    return distance
+
+
+def waterStation1():
+    stop = False
+
+    while stop == False:
+
+        dist = distance(GPIO_TRIGGER1, GPIO_ECHO1)
+
+        time.sleep(5)
+
+        waterOn(GPIOPin1)
+
+        time.sleep(2)
+
+        waterOff(GPIOPin1)
+
+        if dist >= 5:
+            stop = True
+
+
+def waterStation2():
+    stop = False
+
+    while stop == False:
+
+        dist = distance(GPIO_TRIGGER2, GPIO_ECHO2)
+
+        time.sleep(5)
+
+        waterOn(GPIOPin2)
+
+        time.sleep(2)
+
+        waterOff(GPIOPin2)
+
+        if dist >= 5:
+            stop = True
+
+
+def waterStation3():
+    stop = False
+
+    while stop == False:
+
+        dist = distance(GPIO_TRIGGER3, GPIO_ECHO3)
+
+        time.sleep(5)
+
+        waterOn(GPIOPin3)
+
+        time.sleep(2)
+
+        waterOff(GPIOPin3)
+
+        if dist >= 5:
+            stop = True
+
+
+def waterStation4():
+    stop = False
+
+    while stop == False:
+
+        dist = distance(GPIO_TRIGGER4, GPIO_ECHO4)
+
+        time.sleep(5)
+
+        waterOn(GPIOPin4)
+
+        time.sleep(2)
+
+        waterOff(GPIOPin4)
+
+        if dist >= 5:
+            stop = True
+
+
+def waterStationAll():
+    #waterStation1()
+    #waterStation2()
+    #waterStation3()
+    #waterStation4()
+    p1 = multiprocessing.Process(target=waterStation1, args=())
+    p2 = multiprocessing.Process(target=waterStation2, args=())
+    p3 = multiprocessing.Process(target=waterStation3, args=())
+    p4 = multiprocessing.Process(target=waterStation4, args=())
+    p1.start()
+    p2.start()
+    p3.start()
+    p4.start()
+
+    p1.join()
+    p2.join()
+    p3.join()
+    p4.join()
+
 
 def fillFunc(message):
-    print(message)
+    if message =="1":
+        p1 = multiprocessing.Process(target=waterStation1, args=())
+        p1.start()
+    if message =="2":
+        p2 = multiprocessing.Process(target=waterStation2, args=())
+        p2.start()
+    if message =="3":
+        p3 = multiprocessing.Process(target=waterStation3, args=())
+        p3.start()
+    if message =="4":
+        p4 = multiprocessing.Process(target=waterStation4, args=())
+        p4.start()
+    if message =="All":
+        p5 = multiprocessing.Process(target=waterStationAll, args=())
+        p5.start()
 
 layout = [[sg.Text("Alerts", background_color = "white",text_color="black",justification ="left",font = ("Helvetica", 30),key = "alert"),sg.Graph(canvas_size=(50,50),graph_bottom_left=(0, 0),graph_top_right=(50,50),key = "graph", background_color = "white",pad=((5,0),3)),sg.Text("Water Tank Needs to be Filled",background_color= "#800000",text_color="white",k="banner",font = ("Helvetica", 31),pad=((0,5),3))],
           [sg.Text("Water Stations", background_color = "white",text_color="black",size= (20,1),justification = "right",font = ("Helvetica", 30)),sg.Button("Select All",button_color  = "#800000",font = ("Helvetica", 30))],
