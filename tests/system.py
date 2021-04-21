@@ -3,6 +3,14 @@ import time
 
 GPIO.setmode(GPIO.BCM)
 
+#Sensors for Water Level Sensor
+GPIO_TRIGGER = 
+GPIO_ECHO = 
+GPIOPin = 
+GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
+GPIO.setup(GPIO_ECHO, GPIO.IN)
+GPIO.setup(GPIOPin, GPIO.OUT)
+
 #Sensors for Staion 1
 GPIO_TRIGGER1 = 
 GPIO_ECHO1 = 
@@ -35,6 +43,10 @@ GPIO.setup(GPIO_ECHO4, GPIO.IN)
 GPIOPin4 = 
 GPIO.setup(GPIOPin4, GPIO.OUT)
 
+def waterLevel():
+
+
+
 def waterOn(Pin):
 
 	GPIO.output(Pin,True)
@@ -42,7 +54,7 @@ def waterOn(Pin):
 def waterOff(Pin):
 	GPIO.output(Pin,False)	
 
-def System(GPIO_Trigger, GPIO_ECHO, Pin):
+def distance(GPIO_Trigger, GPIO_ECHO, Pin):
 
 	keepGoing = True
 
@@ -74,21 +86,93 @@ def System(GPIO_Trigger, GPIO_ECHO, Pin):
 
     	waterOn(Pin)
 
-    	if distance = 5:
+    	if distance == 5:
     		waterOff(Pin)
     		keepGoing = False
 
-    return 
+return 
 
+def waterStation1(TRIGGER,ECHO,Pin):
 
+	stop = False
 
+	while stop == False: 
 
-def waterStation1():
+		dist = distance(TRIGGER, ECHO, Pin)
 
-def waterStation2():
+		time.sleep(5)
 
-def waterStation3():
+		waterOn(Pin)
 
-def waterStation4():
+		time.sleep(2)
 
-def waterStationall():
+		waterOff(Pin)
+
+		if dist == 5:
+
+			stop = True
+
+def waterStation2(TRIGGER,ECHO,Pin):
+	stop = False
+
+	while stop == False: 
+
+		dist = distance(TRIGGER, ECHO, Pin)
+
+		time.sleep(5)
+
+		waterOn(Pin)
+
+		time.sleep(2)
+
+		waterOff(Pin)
+
+		if dist == 5:
+
+			stop = True
+	
+
+def waterStation3(TRIGGER,ECHO,Pin):
+	stop = False
+
+	while stop == False: 
+
+		dist = distance(TRIGGER, ECHO, Pin)
+
+		time.sleep(5)
+
+		waterOn(Pin)
+
+		time.sleep(2)
+
+		waterOff(Pin)
+
+		if dist == 5:
+
+			stop = True
+
+def waterStation4(TRIGGER,ECHO,Pin):
+	stop = False
+
+	while stop == False: 
+
+		dist = distance(TRIGGER, ECHO, Pin)
+
+		time.sleep(5)
+
+		waterOn(Pin)
+
+		time.sleep(2)
+
+		waterOff(Pin)
+
+		if dist == 5:
+
+			stop = True
+
+def waterStationAll():
+
+	waterStation1()
+	waterStation2()
+	waterStation3()
+	waterStation4()

@@ -55,7 +55,7 @@ def distance():
 
 if __name__ == '__main__':
 
-stop = False
+    stop = False
 
     try:
         while stop == False:
