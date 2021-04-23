@@ -6,9 +6,8 @@ import time
 GPIO.setmode(GPIO.BCM)
 
 #set GPIO Pins
-GPIO_TRIGGER = 6
-GPIO_ECHO = 5
-
+GPIO_TRIGGER = 9
+GPIO_ECHO = 11
 #set GPIO direction (IN / OUT)
 GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
 GPIO.setup(GPIO_ECHO, GPIO.IN)
@@ -50,4 +49,6 @@ if __name__ == '__main__':
         # Reset by pressing CTRL + C
     except KeyboardInterrupt:
         print("Measurement stopped by User")
+        
+    finally:
         GPIO.cleanup()

@@ -6,19 +6,19 @@ import time
 GPIO.setmode(GPIO.BCM)
 
 #set GPIO Pins
-GPIO_TRIGGER = 6
-GPIO_ECHO = 5
+GPIO_TRIGGER = 3
+GPIO_ECHO = 2
 
 #set water pump
 
-waterPin = 
+waterPin = 17
 
 
 #set GPIO direction (IN / OUT)
 GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
 GPIO.setup(GPIO_ECHO, GPIO.IN)
 GPIO.setup(waterPin, GPIO.OUT)
-
+GPIO.output(waterPin,True)
 def waterOn(Pin):
     GPIO.output(Pin,True)
 
@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
             waterOn(waterPin)
 
-            sleep(2)
+            time.sleep(2)
 
             wateroff(waterPin)
 
