@@ -84,7 +84,7 @@ def distance(GPIO_Trigger, GPIO_ECHO):
     #keepGoing = True
     print('distance called')
     #while keepGoing == True:
-    #GPIO.output(GPIO_Trigger, True)
+    GPIO.output(GPIO_Trigger, True)
 
     # set Trigger after 0.01ms to LOW
     time.sleep(0.00001)
@@ -113,81 +113,87 @@ def distance(GPIO_Trigger, GPIO_ECHO):
 
 def waterStation1():
     stop = False
-    print("water station 1! -----\n")
     dist = distance(GPIO_TRIGGER1, GPIO_ECHO1)
-    print(dist , '\n')
+
+    if dist <= 10:
+            stop = True
+
     while stop == False:
 
-        
-        #time.sleep(5)
-
         waterOn(GPIOPin1)
-
-        time.sleep(5)
-
-        waterOff(GPIOPin1)
-        
         time.sleep(2)
+        
 
+        GPIO.output(GPIOPin1, GPIO.HIGH) #water off
+        time.sleep(.5)
+        dist = distance(GPIO_TRIGGER1, GPIO_ECHO1)
         if dist <= 10:
             stop = True
+            GPIO.output(GPIOPin1, GPIO.HIGH)
 
 
 def waterStation2():
     stop = False
+    dist = distance(GPIO_TRIGGER2, GPIO_ECHO2)
+
+    if dist <= 10:
+            stop = True
 
     while stop == False:
 
-        dist = distance(GPIO_TRIGGER2, GPIO_ECHO2)
-
-        time.sleep(5)
-
         waterOn(GPIOPin2)
-
         time.sleep(2)
+        
 
-        waterOff(GPIOPin2)
-
-        if dist >= 5:
+        GPIO.output(GPIOPin2, GPIO.HIGH) #water off
+        time.sleep(.5)
+        dist = distance(GPIO_TRIGGER2, GPIO_ECHO2)
+        if dist <= 10:
             stop = True
+            GPIO.output(GPIOPin2, GPIO.HIGH)
 
 
 def waterStation3():
     stop = False
+    dist = distance(GPIO_TRIGGER3, GPIO_ECHO3)
+    if dist <= 10:
+            stop = True
 
     while stop == False:
 
         dist = distance(GPIO_TRIGGER3, GPIO_ECHO3)
 
-        time.sleep(5)
+        
 
         waterOn(GPIOPin3)
+        time.sleep(5)
 
-        time.sleep(2)
-
-        waterOff(GPIOPin3)
-
-        if dist >= 5:
+        GPIO.output(GPIOPin3, GPIO.HIGH) #water off
+        time.sleep(1)
+        dist = distance(GPIO_TRIGGER3, GPIO_ECHO3)
+        if dist <= 10:
             stop = True
 
 
 def waterStation4():
     stop = False
+    dist = distance(GPIO_TRIGGER4, GPIO_ECHO4)
+
+    if dist <= 10:
+            stop = True
 
     while stop == False:
 
-        dist = distance(GPIO_TRIGGER4, GPIO_ECHO4)
-
-        time.sleep(5)
-
         waterOn(GPIOPin4)
-
         time.sleep(2)
+        
 
-        waterOff(GPIOPin4)
-
-        if dist >= 5:
+        GPIO.output(GPIOPin4, GPIO.HIGH) #water off
+        #time.sleep(1)
+        dist = distance(GPIO_TRIGGER4, GPIO_ECHO4)
+        if dist <= 10:
             stop = True
+            GPIO.output(GPIOPin4, GPIO.HIGH)
 
 
 def waterStationAll():
