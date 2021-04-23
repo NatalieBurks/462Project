@@ -6,6 +6,7 @@ GPIO.setmode(GPIO.BCM)
 #Sensors for Water Level Sensor
 GPIO_TRIGGER = 
 GPIO_ECHO = 
+#For water pin
 GPIOPin = 
 GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
 GPIO.setup(GPIO_ECHO, GPIO.IN)
@@ -171,7 +172,6 @@ def waterStation4(TRIGGER,ECHO,Pin):
 			stop = True
 
 def waterStationAll():
-
 	waterStation1()
 	waterStation2()
 	waterStation3()
