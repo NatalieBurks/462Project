@@ -17,37 +17,40 @@ GPIO.setmode(GPIO.BCM)
 #GPIO.setup(GPIOPin, GPIO.OUT)
 
 #Sensors for Staion 1
-GPIO_TRIGGER1 =3
-GPIO_ECHO1 =2
+GPIO_TRIGGER1 = 3
+GPIO_ECHO1 = 2
 GPIO.setup(GPIO_TRIGGER1, GPIO.OUT)
 GPIO.setup(GPIO_ECHO1, GPIO.IN)
-GPIOPin1 =10
+GPIOPin1 =17
 GPIO.setup(GPIOPin1, GPIO.OUT)
+GPIO.output(GPIOPin1, GPIO.HIGH)
 
 #Sensors for Station 2
 GPIO_TRIGGER2 =15
 GPIO_ECHO2 =14
 GPIO.setup(GPIO_TRIGGER2, GPIO.OUT)
 GPIO.setup(GPIO_ECHO2, GPIO.IN)
-GPIOPin2 =17
+GPIOPin2 =27
 GPIO.setup(GPIOPin2, GPIO.OUT)
-
+GPIO.output(GPIOPin2, GPIO.HIGH)
 
 #Sensors for Station 3
 GPIO_TRIGGER3 =24
 GPIO_ECHO3 =23
 GPIO.setup(GPIO_TRIGGER3, GPIO.OUT)
 GPIO.setup(GPIO_ECHO3, GPIO.IN)
-GPIOPin3 =22
+GPIOPin3 =10
 GPIO.setup(GPIOPin3, GPIO.OUT)
+GPIO.output(GPIOPin3, GPIO.HIGH)
 
 #Sensors for Station 4
 GPIO_TRIGGER4 =8
 GPIO_ECHO4 =25
 GPIO.setup(GPIO_TRIGGER4, GPIO.OUT)
 GPIO.setup(GPIO_ECHO4, GPIO.IN)
-GPIOPin4 =27
+GPIOPin4 =22
 GPIO.setup(GPIOPin4, GPIO.OUT)
+GPIO.output(GPIOPin4, GPIO.HIGH)
 
 
 def waterLevel():
@@ -79,7 +82,7 @@ def waterOff(Pin):
 
 def distance(GPIO_Trigger, GPIO_ECHO):
     #keepGoing = True
-
+    print('distance called')
     #while keepGoing == True:
     #GPIO.output(GPIO_Trigger, True)
 
@@ -104,26 +107,29 @@ def distance(GPIO_Trigger, GPIO_ECHO):
     # and divide by 2, because there and back
 
     distance = (TimeElapsed * 34300) / 2
-
+    print('dist from fucntion; ',distance)
     return distance
 
 
 def waterStation1():
     stop = False
     print("water station 1! -----\n")
+    dist = distance(GPIO_TRIGGER1, GPIO_ECHO1)
+    print(dist , '\n')
     while stop == False:
 
-        dist = distance(GPIO_TRIGGER1, GPIO_ECHO1)
-        print(dist , '\n')
+        
         #time.sleep(5)
 
         waterOn(GPIOPin1)
 
-        time.sleep(10)
+        time.sleep(5)
 
         waterOff(GPIOPin1)
+        
+        time.sleep(2)
 
-        if dist <= 0:
+        if dist <= 10:
             stop = True
 
 
@@ -233,10 +239,6 @@ window["graph"].update(visible =False)
 window["banner"].update(visible=False)
 window["alert"].update(visible=False)
 
-waterOn(GPIOPin1)
-waterOn(GPIOPin2)
-waterOn(GPIOPin3)
-waterOn(GPIOPin4)
 
 while True:
     if True:
