@@ -67,11 +67,11 @@ def waterLevel():
 
 
 def waterOn(Pin):
-    GPIO.output(Pin, True)
+    GPIO.output(Pin, GPIO.LOW)
 
 
 def waterOff(Pin):
-    GPIO.output(Pin, False)
+    GPIO.output(Pin, GPIO.HIGH)
 
 
 def distance(GPIO_Trigger, GPIO_ECHO):
