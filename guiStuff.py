@@ -9,12 +9,11 @@ GPIO.cleanup()
 GPIO.setmode(GPIO.BCM)
 
 #Sensors for Water Level Sensor
-#GPIO_TRIGGER =
-#GPIO_ECHO =
-#GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
-#GPIO.setup(GPIO_ECHO, GPIO.IN)
-#GPIOPin =
-#GPIO.setup(GPIOPin, GPIO.OUT)
+GPIO_TRIGGER = 19
+GPIO_ECHO = 26
+GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
+GPIO.setup(GPIO_ECHO, GPIO.IN)
+
 
 #Sensors for Staion 1
 GPIO_TRIGGER1 = 3
@@ -110,12 +109,25 @@ def distance(GPIO_Trigger, GPIO_ECHO):
     print('dist from fucntion; ',distance)
     return distance
 
+def avgDist(GPIO_Trigger, GPIO_ECHO):
+    sum = 0
+    c = 0
+    while c < 4:
+        dist = distance(GPIO_Trigger, GPIO_ECHO)        
+        if(dist < 30 and dist > 0):
+            sum += dist
+            c+=1
+            
+    avg = sum / c
+    print(avg)
+    return avg
+   
 
 def waterStation1():
     stop = False
-    dist = distance(GPIO_TRIGGER1, GPIO_ECHO1)
+    dist = avgDist(GPIO_TRIGGER1, GPIO_ECHO1)
 
-    if dist <= 10:
+    if dist <= 8:
             stop = True
 
     while stop == False:
@@ -126,17 +138,17 @@ def waterStation1():
 
         GPIO.output(GPIOPin1, GPIO.HIGH) #water off
         time.sleep(.5)
-        dist = distance(GPIO_TRIGGER1, GPIO_ECHO1)
-        if dist <= 10:
+        dist = avgDist(GPIO_TRIGGER1, GPIO_ECHO1)
+        if dist <= 8:
             stop = True
             GPIO.output(GPIOPin1, GPIO.HIGH)
 
 
 def waterStation2():
     stop = False
-    dist = distance(GPIO_TRIGGER2, GPIO_ECHO2)
+    dist = avgDist(GPIO_TRIGGER2, GPIO_ECHO2)
 
-    if dist <= 10:
+    if dist <= 8:
             stop = True
 
     while stop == False:
@@ -147,16 +159,16 @@ def waterStation2():
 
         GPIO.output(GPIOPin2, GPIO.HIGH) #water off
         time.sleep(.5)
-        dist = distance(GPIO_TRIGGER2, GPIO_ECHO2)
-        if dist <= 10:
+        dist = avgDist(GPIO_TRIGGER2, GPIO_ECHO2)
+        if dist <= 8:
             stop = True
             GPIO.output(GPIOPin2, GPIO.HIGH)
 
 
 def waterStation3():
     stop = False
-    dist = distance(GPIO_TRIGGER3, GPIO_ECHO3)
-    if dist <= 10:
+    dist = avgDist(GPIO_TRIGGER3, GPIO_ECHO3)
+    if dist <= 8:
             stop = True
 
     while stop == False:
@@ -170,16 +182,16 @@ def waterStation3():
 
         GPIO.output(GPIOPin3, GPIO.HIGH) #water off
         time.sleep(1)
-        dist = distance(GPIO_TRIGGER3, GPIO_ECHO3)
-        if dist <= 10:
+        dist = avgDist(GPIO_TRIGGER3, GPIO_ECHO3)
+        if dist <= 8:
             stop = True
 
 
 def waterStation4():
     stop = False
-    dist = distance(GPIO_TRIGGER4, GPIO_ECHO4)
+    dist = avgDist(GPIO_TRIGGER4, GPIO_ECHO4)
 
-    if dist <= 10:
+    if dist <= 8:
             stop = True
 
     while stop == False:
@@ -190,8 +202,8 @@ def waterStation4():
 
         GPIO.output(GPIOPin4, GPIO.HIGH) #water off
         #time.sleep(1)
-        dist = distance(GPIO_TRIGGER4, GPIO_ECHO4)
-        if dist <= 10:
+        dist = avgDist(GPIO_TRIGGER4, GPIO_ECHO4)
+        if dist <= 8:
             stop = True
             GPIO.output(GPIOPin4, GPIO.HIGH)
 
@@ -214,9 +226,10 @@ def waterStationAll():
     p2.join()
     p3.join()
     p4.join()
+def place(elem):
+    return sg.Column([[elem]],background_color="white",pad=(0,0))
 
-
-layout = [[sg.Text("Alerts", background_color = "white",text_color="black",justification ="left",font = ("Helvetica", 30),visible = False,key = "alert"),sg.Graph(canvas_size=(50,50),graph_bottom_left=(0, 0),graph_top_right=(50,50),key = "graph", background_color = "white",visible = False,pad=((5,0),3)),sg.Text("Water Tank Needs to be Filled",background_color= "#800000",text_color="white",k="banner",font = ("Helvetica", 31),visible = False,pad=((0,5),3))],
+layout = [[place(sg.Text("Alerts", background_color = "white",text_color="black",justification ="left",font = ("Helvetica", 30),visible = True,key = "alert")),place(sg.Graph(canvas_size=(50,50),graph_bottom_left=(0, 0),graph_top_right=(50,50),key = "graph", background_color = "white",visible = True,pad=((5,0),3))),place(sg.Text("Water Tank Needs to be Filled",background_color= "#800000",text_color="white",k="banner",font = ("Helvetica", 31),visible = True,pad=((0,5),3)))],
           [sg.Text("Water Stations", background_color = "white",text_color="black",size= (20,1),justification = "right",font = ("Helvetica", 30)),sg.Button("Select All",button_color  = "#800000",font = ("Helvetica", 30))],
           [sg.Button("1",button_color  = "#800000",font = ("Helvetica", 90)),sg.Button("2",button_color  = "#800000",font = ("Helvetica", 90)),sg.Button("3",button_color  = "#800000",font = ("Helvetica", 90)),sg.Button("4",button_color  = "#800000",font = ("Helvetica", 90))]]
 
@@ -231,12 +244,12 @@ def fillFunc(message):
     stop = False
     dist = distance(GPIO_TRIGGER, GPIO_ECHO)
 
-    if dist >= 30:
+    if dist >= 23:
             stop = True
     if stop:
+        window["alert"].update(visible=True)
         window["graph"].update(visible =True)
         window["banner"].update(visible=True)
-        window["alert"].update(visible=True)
     if not stop:
         window["graph"].update(visible =False)
         window["banner"].update(visible=False)
