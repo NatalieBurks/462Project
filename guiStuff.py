@@ -216,24 +216,7 @@ def waterStationAll():
     p4.join()
 
 
-def fillFunc(message):
-    if message =="1":
-        p1 = multiprocessing.Process(target=waterStation1, args=())
-        p1.start()
-    if message =="2":
-        p2 = multiprocessing.Process(target=waterStation2, args=())
-        p2.start()
-    if message =="3":
-        p3 = multiprocessing.Process(target=waterStation3, args=())
-        p3.start()
-    if message =="4":
-        p4 = multiprocessing.Process(target=waterStation4, args=())
-        p4.start()
-    if message =="All":
-        p5 = multiprocessing.Process(target=waterStationAll, args=())
-        p5.start()
-
-layout = [[sg.Text("Alerts", background_color = "white",text_color="black",justification ="left",font = ("Helvetica", 30),key = "alert"),sg.Graph(canvas_size=(50,50),graph_bottom_left=(0, 0),graph_top_right=(50,50),key = "graph", background_color = "white",pad=((5,0),3)),sg.Text("Water Tank Needs to be Filled",background_color= "#800000",text_color="white",k="banner",font = ("Helvetica", 31),pad=((0,5),3))],
+layout = [[sg.Text("Alerts", background_color = "white",text_color="black",justification ="left",font = ("Helvetica", 30),visible = False,key = "alert"),sg.Graph(canvas_size=(50,50),graph_bottom_left=(0, 0),graph_top_right=(50,50),key = "graph", background_color = "white",visible = False,pad=((5,0),3)),sg.Text("Water Tank Needs to be Filled",background_color= "#800000",text_color="white",k="banner",font = ("Helvetica", 31),visible = False,pad=((0,5),3))],
           [sg.Text("Water Stations", background_color = "white",text_color="black",size= (20,1),justification = "right",font = ("Helvetica", 30)),sg.Button("Select All",button_color  = "#800000",font = ("Helvetica", 30))],
           [sg.Button("1",button_color  = "#800000",font = ("Helvetica", 90)),sg.Button("2",button_color  = "#800000",font = ("Helvetica", 90)),sg.Button("3",button_color  = "#800000",font = ("Helvetica", 90)),sg.Button("4",button_color  = "#800000",font = ("Helvetica", 90))]]
 
@@ -244,13 +227,37 @@ window["graph"].update()
 window["graph"].update(visible =False)
 window["banner"].update(visible=False)
 window["alert"].update(visible=False)
+def fillFunc(message):
+    stop = False
+    dist = distance(GPIO_TRIGGER, GPIO_ECHO)
 
-
-while True:
-    if True:
+    if dist >= 30:
+            stop = True
+    if stop:
+        window["graph"].update(visible =True)
+        window["banner"].update(visible=True)
+        window["alert"].update(visible=True)
+    if not stop:
         window["graph"].update(visible =False)
         window["banner"].update(visible=False)
         window["alert"].update(visible=False)
+        if message =="1":
+            p1 = multiprocessing.Process(target=waterStation1, args=())
+            p1.start()
+        if message =="2":
+            p2 = multiprocessing.Process(target=waterStation2, args=())
+            p2.start()
+        if message =="3":
+            p3 = multiprocessing.Process(target=waterStation3, args=())
+            p3.start()
+        if message =="4":
+            p4 = multiprocessing.Process(target=waterStation4, args=())
+            p4.start()
+        if message =="All":
+            p5 = multiprocessing.Process(target=waterStationAll, args=())
+            p5.start()
+
+while True:
     event, values = window.read()
     if event == sg.WIN_CLOSED:
         break
